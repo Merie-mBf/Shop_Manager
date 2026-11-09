@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Manager</title>
+    <link rel="stylesheet" href="./src/output.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+
+<body>
+    <header id="header">
+        <div class="logo">
+            <i class="fa-brands fa-shopify"></i>
+            <h1>Shop Manager</h1>
+        </div>
+        <div class="navigation">
+            <nav>
+                <a href="#products">Products</a>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section id="search">
+            <div class="text">
+                <small>Curated essentials</small>
+                <h2>Discover Our Collection</h2>
+                <p>Find the perfect products for your everyday needs.</p>
+            </div>
+            <div>
+                <form>
+                    <input type="search" id="searchInput" placeholder="Search products..."
+                        class=" border border-gray-300 ">
+                </form>
+            </div>
+        </section>
+        <section id="filter">
+            <div>
+                <form>
+                    <div class="categories">
+                        <label for="category">CATEGORY</label>
+                        <select id="category" name="" required>
+                            <option value="">All categories</option>
+                            <option value="">beauty</option>
+                            <option value="">home</option>
+                            <option value="">mobile</option>
+                        </select>
+                    </div>
+                    <div class="maxPrice">
+                        <label for="">MAXIMUM PRICE</label>
+                        <input type="number" id="maxPrice" name="maxPrice" class=" border border-gray-300 ">
+                    </div>
+                    <div class="inStock">
+                        <label>
+                            <input type="checkbox" id="inStock">
+                            In stock only
+                        </label>
+                    </div>
+                </form>
+            </div>
+        </section>
+        <section id="products">
+            <div>
+                <h3>Products</h3>
+                <small>Showing 100 of 100 products</small>
+            </div>
+            <article>
+                <img src="/assets/smart.jpg" alt="Smart Watch Pro">
+                <div class="product-info">
+                    <h4>Smart Watch Pro</h4>
+                    <p>Stay connected, track your fitness, and enjoy smart features with a stylish design.</p>
+                    <span>Price:500 MAD</span>
+                    <span>Category: Electronics</span>
+                    <span>In stock:99</span>
+                </div>
+            </article>
+            <article>
+                <img src="/assets/shoses.jpg" alt="New Balance Women's Sneakers">
+                <div class="product-info">
+                    <h4>New Balance Women's Sneakers</h4>
+                    <p>Stylish and comfortable women's sneakers, perfect for everyday wear and casual outfits.</p>
+                    <span>Price: 799 MAD</span>
+                    <span>Category:Sneakers</span>
+                    <span>In stock:56</span>
+                </div>
+            </article>
+            <article>
+                <img src="/assets/cask.jpg" alt="Beats Studio Pro">
+                <div class="product-info">
+                    <h4>Beats Studio Pro</h4>
+                    <p>Premium wireless headphones with advanced noise cancellation, immersive sound, and comfortable
+                        design.</p>
+                    <span>Price:3,499 MAD</span>
+                    <span>Category:Electronics</span>
+                    <span>In stock:37</span>
+                </div>
+            </article>
+        </section>
+    </main>
+</body>
+
+</html>
