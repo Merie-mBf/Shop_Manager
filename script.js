@@ -59,7 +59,12 @@ function searchProduct() {
         fetch(`${API_URL}/products?search=${searchInput.value}`)
             .then(response => response.json())
             .then(data => {
-                afficheProduct(data);
+                if (data.length === 0) {
+                    products.innerHTML = ` <p class="font-bold text-[#795337] text-xl w-full">No products found!</p>`;
+                } else {
+                    afficheProduct(data);
+                }
+
             });
     });
 }
