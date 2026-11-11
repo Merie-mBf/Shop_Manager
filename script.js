@@ -1,4 +1,5 @@
 const products = document.getElementById("products");
+const searchInput = document.getElementById("searchInput");
 const API_URL = "http://localhost:3000/api";
 
 async function getProducts() {
@@ -51,3 +52,16 @@ function afficheProduct(data) {
     });
     products.innerHTML = template;
 }
+
+function searchProduct() {
+    searchInput.addEventListener("input", function () {
+        console.log(searchInput.value);
+        fetch(`${API_URL}/products?search=${searchInput.value}`)
+            .then(response => response.json())
+            .then(data => {
+                afficheProduct(data);
+            });
+    });
+}
+
+searchProduct();
