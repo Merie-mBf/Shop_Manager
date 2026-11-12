@@ -97,3 +97,53 @@ function searchProduct() {
 searchProduct();
 
 
+async function getCategories() {
+    try {
+        const response = await fetch(`${API_URL}/categories`);
+
+        if (!response.ok) {
+            throw new Error("Failed to load categories");
+        }
+
+        const data = await response.json();
+
+        data.forEach(item => {
+            const option = document.createElement("option");
+
+            option.value = item.id;
+            option.textContent = item.name;
+
+            category.appendChild(option);
+        });
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+getCategories();
+
+
+function filterByCategories() {
+    category.addEventListener("change", async function () {
+        try {
+            const selectedCategory = this.value;
+            const response = await fetch(
+                `${API_URL}/products?categoryId=${selectedCategory}`
+            );
+
+            if (!response.ok) {
+                throw new Error("Failed to load categories");
+            }
+
+            const data = await response.json();
+
+            afficheProduct(data);
+
+        } catch (error) {
+            console.log(error.message);
+        }
+
+    });
+}
+
+filterByCategories()
