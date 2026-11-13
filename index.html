@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shop Manager</title>
-    <link rel="stylesheet" href="./src/output.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
+
 <body>
+
     <header id="header" class="flex items-center justify-between bg-[#70452F] rounded-b-2xl px-6 py-4">
         <div class="logo flex items-center justify-between gap-2">
             <i class="fa-brands fa-shopify text-2xl text-[#F5F0E8]"></i>
@@ -19,6 +21,7 @@
             </nav>
         </div>
     </header>
+
     <main class="bg-[#F5F0E8] pt-1">
 
         <section id="search" class="mx-8 mt-12 rounded-3xl bg-[#E8D5C2] p-10 md:p-16">
@@ -28,7 +31,7 @@
                 <p class="mt-4 text-lg text-[#80634F]">Find the perfect products for your everyday needs.</p>
             </div>
             <div class="mt-10">
-                <form>
+                <form class="form">
                     <input type="search" id="searchInput" placeholder="Search products..."
                         class="w-full rounded-xl border border-[#D8C2AE] bg-white px-5 py-4 text-[#70452F] focus:border-[#70452F] focus:outline-none">
                 </form>
@@ -37,12 +40,12 @@
 
         <section id="filter" class="mx-8 mt-12 rounded-3xl border border-[#E8D5C2] bg-white p-6 md:p-8">
             <div>
-                <form class="flex flex-wrap items-end justify-between gap-6">
+                <form class="form flex flex-wrap items-end justify-between gap-6">
                     <div class="categories flex flex-col gap-3">
                         <label for="category" class="text-[#70452F] font-medium">CATEGORY</label>
                         <select id="category" name="category" required class="rounded-xl border border-[#D8C2AE]
                          px-5 py-4 w-full text-[#70452F] focus:border-[#70452F] focus:outline-none">
-                           <!--  <option value="">All categories</option> -->
+                            <!--  <option value="">All categories</option> -->
                             <!-- <option value="">Books</option>
                             <option value="">Electronics</option>
                             <option value="">mobile</option> -->
@@ -54,8 +57,9 @@
                             class="rounded-xl border border-[#D8C2AE] px-5 py-4 w-full text-[#70452F] focus:border-[#70452F] focus:outline-none">
                     </div>
                     <div class="inStock">
-                        <label class="flex items-center gap-3 rounded-xl border border-[#D8C2AE] px-5 py-4 w-full text-[#70452F]">
-                        <input type="checkbox" id="inStock"> In stock only</label>
+                        <label
+                            class="flex items-center gap-3 rounded-xl border border-[#D8C2AE] px-5 py-4 w-full text-[#70452F]">
+                            <input type="checkbox" id="inStock"> In stock only</label>
                     </div>
                 </form>
             </div>
@@ -66,7 +70,6 @@
                 <h3 class="text-3xl font-bold text-[#70452F] mb-2">Products</h3>
                 <small class="text-base text-[#70452F]">Showing 100 of 100 products</small>
             </div>
-
             <!-- <article 
                 class="w-full sm:w-[48%] lg:w-[31%] bg-white rounded-3xl overflow-hidden border border-[#eee2d7] shadow-sm hover:shadow-lg transition duration-300">
                 <img class="w-full h-64 object-contain bg-[#f0e5d9] p-6" src="/assets/smart.jpg" alt="Smart Watch Pro">
@@ -106,7 +109,19 @@
                 </div>
             </article> -->
         </section>
+
+        <div class="w-full my-8">
+            <button type="button" id="btnReset"
+                class="block mx-auto bg-[#70452F] text-[#F5F0E8] px-8 py-3 rounded-xl font-semibold hover:bg-[#5a3829] transition duration-300 shadow-sm">
+                <i class="fa-solid fa-rotate-left mr-2"></i>
+                Reset Filters
+            </button>
+        </div>
+
     </main>
+
     <script src="script.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
 </body>
 </html>

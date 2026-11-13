@@ -3,6 +3,9 @@ const searchInput = document.getElementById("searchInput");
 const category = document.getElementById("category");
 const maxPrice = document.getElementById("maxPrice");
 const inStock = document.getElementById("inStock");
+const btnReset=document.getElementById("btnReset");
+const form=document.querySelectorAll(".form");
+
 
 const API_URL = "http://localhost:3000/api";
 
@@ -254,3 +257,18 @@ async function filterByAll() {
 }
 
 filterByAll();
+
+//swith alert 
+function resetForm(){
+  btnReset.addEventListener('click', () => {
+    searchInput.value = "";
+    category.value = "";
+    maxPrice.value = "";
+   inStock.checked = "";
+   console.log("réinitialiser des filtres ")
+    
+   getProducts()
+  });
+
+}
+resetForm();
