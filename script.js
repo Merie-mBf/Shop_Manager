@@ -215,4 +215,42 @@ filterByStock();
 
 
 
+async function filterByAll() {
 
+    category.addEventListener("change", FilteredProducts);
+    maxPrice.addEventListener("input", FilteredProducts);
+    inStock.addEventListener("change", FilteredProducts);
+
+    async function FilteredProducts() {
+        try {
+            let url = `${API_URL}/products?`;
+
+            if (category.value !== "") {
+                url += `categoryId=${category.value}&`;
+            }
+
+            if (maxPrice.value !== "") {
+                url += `maxPrice=${maxPrice.value}&`;
+            }
+
+            if (inStock.checked) {
+                url += `inStock=true`;
+            }
+
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                throw new Error("Failed to filter products");
+            }
+
+            const data = await response.json();
+
+            afficheProduct(data, "No products match your selected filters!");
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+
+filterByAll();
