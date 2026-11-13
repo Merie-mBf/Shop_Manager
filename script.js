@@ -1,8 +1,11 @@
 const products = document.getElementById("products");
 const searchInput = document.getElementById("searchInput");
 const category = document.getElementById("category");
+const maxPrice = document.getElementById("maxPrice");
+const inStock = document.getElementById("inStock");
 
 const API_URL = "http://localhost:3000/api";
+
 
 async function getProducts() {
     try {
@@ -14,8 +17,7 @@ async function getProducts() {
 
         const data = await response.json();
 
-        afficheProduct(data);
-        //afficheProduct([]);
+        afficheProduct(data, "No products available at the moment!");
 
     } catch (error) {
         console.log(error);
@@ -31,17 +33,19 @@ async function getProducts() {
 }
 getProducts();
 
-function afficheProduct(data) {
+
+
+function afficheProduct(data, messageErr) {
     let template = "";
     if (data.length === 0) {
         products.innerHTML = `
-    <p class="font-bold text-[#795337] text-xl w-full">No products available at the moment !</p>`;
+    <p class="font-bold text-[#795337] text-xl w-full">${messageErr}</p>`;
         return;
     }
     data.forEach(product => {
         template += `
        <article 
-                class="w-full sm:w-[48%] lg:w-[31%] bg-white rounded-3xl overflow-hidden border border-[#eee2d7] shadow-sm hover:shadow-lg transition duration-300">
+                class="product-card  w-full sm:w-[48%] lg:w-[31%] bg-white rounded-3xl overflow-hidden border border-[#eee2d7] shadow-sm hover:shadow-lg transition duration-300">
                 <img class="w-full h-64 object-contain bg-[#f0e5d9] p-6" src="http://localhost:3000${product.image}" alt="${product.name}">
                 <div class="product-info p-6">
                     <h4 class="text-xl font-bold text-[#382719] mb-3">${product.name}</h4>
@@ -55,6 +59,7 @@ function afficheProduct(data) {
     });
     products.innerHTML = template;
 }
+
 
 
 function searchProduct() {
@@ -71,30 +76,20 @@ function searchProduct() {
             }
 
             const data = await response.json();
-
-            if (data.length === 0) {
-                products.innerHTML = `
-                    <p class="font-bold text-[#795337] text-xl w-full">
-                        No products found!
-                    </p>
-                `;
-            } else {
-                afficheProduct(data);
-            }
+            afficheProduct(data, "No products found!");
 
         } catch (error) {
             console.log(error);
-
             products.innerHTML = `
-                <p class="font-bold text-[#795337] text-xl w-full">
-                    Unable to search products. Please try again.
-                </p>
-            `;
+        <p class="font-bold text-[#795337] text-xl w-full">
+            Unable to search products. Please try again.
+        </p>
+    `;
         }
     });
 }
-
 searchProduct();
+
 
 
 async function getCategories() {
@@ -106,6 +101,11 @@ async function getCategories() {
         }
 
         const data = await response.json();
+
+        const option = document.createElement("option");
+        option.value = "";
+        option.textContent = "All Categories";
+        category.appendChild(option);
 
         data.forEach(item => {
             const option = document.createElement("option");
@@ -123,27 +123,96 @@ async function getCategories() {
 getCategories();
 
 
+
 function filterByCategories() {
     category.addEventListener("change", async function () {
         try {
             const selectedCategory = this.value;
-            const response = await fetch(
-                `${API_URL}/products?categoryId=${selectedCategory}`
-            );
+            let URL;
+
+            if (selectedCategory === "") {
+                URL = `${API_URL}/products`;
+            } else {
+                URL = `${API_URL}/products?categoryId=${selectedCategory}`;
+            }
+
+            const response = await fetch(URL);
 
             if (!response.ok) {
-                throw new Error("Failed to load categories");
+                throw new Error("Failed to filter products by category");
             }
 
             const data = await response.json();
 
-            afficheProduct(data);
+            afficheProduct(data, "No products match your selected filters!");
 
         } catch (error) {
-            console.log(error.message);
+            console.log(error);
         }
 
     });
 }
-
 filterByCategories()
+
+
+
+function filterByMaxPrice() {
+    maxPrice.addEventListener("input", async function () {
+
+        try {
+            const price = maxPrice.value;
+            const response = await fetch(
+                `${API_URL}/products?maxPrice=${price}`
+            );
+
+            if (!response.ok) {
+                throw new Error("Failed to filter products by maximum price");
+            }
+
+            const data = await response.json();
+
+            afficheProduct(data, "No products match your selected filters!");
+
+        } catch (error) {
+            console.log(error);
+        }
+
+
+    })
+}
+filterByMaxPrice()
+
+
+
+function filterByStock() {
+    inStock.addEventListener("change", async function () {
+        try {
+            let URL;
+
+            if (this.checked) {
+                URL = `${API_URL}/products?inStock=true`;
+            } else {
+                URL = `${API_URL}/products`;
+            }
+
+            const response = await fetch(URL);
+
+            if (!response.ok) {
+                throw new Error("Failed to filter products by stock");
+            }
+
+            const data = await response.json();
+
+            afficheProduct(data, "No products match your selected filters!");
+
+        } catch (error) {
+            console.log(error);
+        }
+    });
+}
+
+filterByStock();
+
+
+
+

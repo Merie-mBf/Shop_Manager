@@ -42,7 +42,7 @@
                         <label for="category" class="text-[#70452F] font-medium">CATEGORY</label>
                         <select id="category" name="category" required class="rounded-xl border border-[#D8C2AE]
                          px-5 py-4 w-full text-[#70452F] focus:border-[#70452F] focus:outline-none">
-                            <option value="">All categories</option>
+                           <!--  <option value="">All categories</option> -->
                             <!-- <option value="">Books</option>
                             <option value="">Electronics</option>
                             <option value="">mobile</option> -->
@@ -50,7 +50,7 @@
                     </div>
                     <div class="maxPrice flex flex-col  gap-3">
                         <label for="maxPrice" class="text-[#70452F] font-medium">MAXIMUM PRICE</label>
-                        <input type="number" id="maxPrice" name="maxPrice" placeholder="any price"
+                        <input type="number" min="0" id="maxPrice" name="maxPrice" placeholder="any price"
                             class="rounded-xl border border-[#D8C2AE] px-5 py-4 w-full text-[#70452F] focus:border-[#70452F] focus:outline-none">
                     </div>
                     <div class="inStock">
