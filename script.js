@@ -3,11 +3,10 @@ const searchInput = document.getElementById("searchInput");
 const category = document.getElementById("category");
 const maxPrice = document.getElementById("maxPrice");
 const inStock = document.getElementById("inStock");
-const btnReset=document.getElementById("btnReset");
-const form=document.querySelectorAll(".form");
-
+const btnReset = document.getElementById("btnReset");
 
 const API_URL = "http://localhost:3000/api";
+
 
 
 async function getProducts() {
@@ -15,7 +14,7 @@ async function getProducts() {
         const response = await fetch(API_URL + "/products");
 
         if (!response.ok) {
-            throw new Error("Loading products...");
+            throw new Error("Failed to load products");
         }
 
         const data = await response.json();
@@ -65,33 +64,32 @@ function afficheProduct(data, messageErr) {
 
 
 
-function searchProduct() {
-    searchInput.addEventListener("input", async function () {
-        const searchValue = searchInput.value.trim();
+async function searchProduct(searchInput) {
+    try {
+        const response = await fetch(
+            `${API_URL}/products?search=${searchInput}`
+        );
 
-        try {
-            const response = await fetch(
-                `${API_URL}/products?search=${searchValue}`
-            );
+        if (!response.ok) {
+            throw new Error("Search failed");
+        }
 
-            if (!response.ok) {
-                throw new Error("Search failed");
-            }
+        const data = await response.json();
+        afficheProduct(data, "No products found!");
 
-            const data = await response.json();
-            afficheProduct(data, "No products found!");
-
-        } catch (error) {
-            console.log(error);
-            products.innerHTML = `
+    } catch (error) {
+        console.log(error);
+        products.innerHTML = `
         <p class="font-bold text-[#795337] text-xl w-full">
             Unable to search products. Please try again.
         </p>
     `;
-        }
-    });
+    }
+
 }
-searchProduct();
+searchInput.addEventListener("input", async function () {
+    searchProduct(searchInput.value.trim());
+})
 
 
 
@@ -127,148 +125,142 @@ getCategories();
 
 
 
-function filterByCategories() {
-    category.addEventListener("change", async function () {
-        try {
-            const selectedCategory = this.value;
-            let URL;
+async function filterByCategories(selectedCategory) {
+    try {
+        let URL;
 
-            if (selectedCategory === "") {
-                URL = `${API_URL}/products`;
-            } else {
-                URL = `${API_URL}/products?categoryId=${selectedCategory}`;
-            }
-
-            const response = await fetch(URL);
-
-            if (!response.ok) {
-                throw new Error("Failed to filter products by category");
-            }
-
-            const data = await response.json();
-
-            afficheProduct(data, "No products match your selected filters!");
-
-        } catch (error) {
-            console.log(error);
+        if (selectedCategory === "") {
+            URL = `${API_URL}/products`;
+        } else {
+            URL = `${API_URL}/products?categoryId=${selectedCategory}`;
         }
 
-    });
+        const response = await fetch(URL);
+
+        if (!response.ok) {
+            throw new Error("Failed to filter products by category");
+        }
+
+        const data = await response.json();
+
+        afficheProduct(data, "No products match your selected filters!");
+
+    } catch (error) {
+        console.log(error);
+    }
 }
-filterByCategories()
+category.addEventListener("change", async function () {
+    filterByCategories(category.value);
+    filterByAll();
+})
 
 
 
-function filterByMaxPrice() {
-    maxPrice.addEventListener("input", async function () {
+async function filterByMaxPrice(price) {
 
-        try {
-            const price = maxPrice.value;
-            const response = await fetch(
-                `${API_URL}/products?maxPrice=${price}`
-            );
+    try {
+        const response = await fetch(
+            `${API_URL}/products?maxPrice=${price}`
+        );
 
-            if (!response.ok) {
-                throw new Error("Failed to filter products by maximum price");
-            }
-
-            const data = await response.json();
-
-            afficheProduct(data, "No products match your selected filters!");
-
-        } catch (error) {
-            console.log(error);
+        if (!response.ok) {
+            throw new Error("Failed to filter products by maximum price");
         }
 
+        const data = await response.json();
 
-    })
+        afficheProduct(data, "No products match your selected filters!");
+
+    } catch (error) {
+        console.log(error);
+    }
+
+
+
 }
-filterByMaxPrice()
+maxPrice.addEventListener("input", async function () {
+    filterByMaxPrice(maxPrice.value);
+    filterByAll();
+})
 
 
 
-function filterByStock() {
-    inStock.addEventListener("change", async function () {
-        try {
-            let URL;
+async function filterByStock(isChecked) {
+    try {
+        let URL;
 
-            if (this.checked) {
-                URL = `${API_URL}/products?inStock=true`;
-            } else {
-                URL = `${API_URL}/products`;
-            }
-
-            const response = await fetch(URL);
-
-            if (!response.ok) {
-                throw new Error("Failed to filter products by stock");
-            }
-
-            const data = await response.json();
-
-            afficheProduct(data, "No products match your selected filters!");
-
-        } catch (error) {
-            console.log(error);
+        if (isChecked) {
+            URL = `${API_URL}/products?inStock=true`;
+            console.log("-----products in stock-----")
+        } else {
+            URL = `${API_URL}/products`;
+            console.log("-----products in data-----")
         }
-    });
-}
 
-filterByStock();
+        const response = await fetch(URL);
 
-
-
-async function filterByAll() {
-
-    category.addEventListener("change", FilteredProducts);
-    maxPrice.addEventListener("input", FilteredProducts);
-    inStock.addEventListener("change", FilteredProducts);
-
-    async function FilteredProducts() {
-        try {
-            let url = `${API_URL}/products?`;
-
-            if (category.value !== "") {
-                url += `categoryId=${category.value}&`;
-            }
-
-            if (maxPrice.value !== "") {
-                url += `maxPrice=${maxPrice.value}&`;
-            }
-
-            if (inStock.checked) {
-                url += `inStock=true`;
-            }
-
-            const response = await fetch(url);
-
-            if (!response.ok) {
-                throw new Error("Failed to filter products");
-            }
-
-            const data = await response.json();
-
-            afficheProduct(data, "No products match your selected filters!");
-
-        } catch (error) {
-            console.log(error);
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message);
         }
+
+        const data = await response.json();
+
+        afficheProduct(data, "No products found!");
+
+    } catch (error) {
+        console.log(error);
     }
 }
 
-filterByAll();
+inStock.addEventListener("change", () => {
+    filterByStock(inStock.checked);
+    filterByAll();
+});
 
-//swith alert 
-function resetForm(){
-  btnReset.addEventListener('click', () => {
-    searchInput.value = "";
-    category.value = "";
-    maxPrice.value = "";
-   inStock.checked = "";
-   console.log("réinitialiser des filtres ")
-    
-   getProducts()
-  });
 
+async function filterByAll() {
+    try {
+        let url = `${API_URL}/products?`;
+
+        if (category.value !== "") {
+            url += `categoryId=${category.value}&`;
+        }
+
+        if (maxPrice.value !== "") {
+            url += `maxPrice=${maxPrice.value}&`;
+        }
+
+        if (inStock.checked) {
+            url += `inStock=true&`;
+        }
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error("Failed to filter products");
+        }
+
+        const data = await response.json();
+
+        afficheProduct(data, "No products match your selected filters!");
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
+function resetForm() {
+    btnReset.addEventListener('click', () => {
+        searchInput.value = "";
+        category.value = "";
+        maxPrice.value = "";
+        inStock.checked = false;
+        console.log("réinitialiser des filtres!")
+
+        getProducts()
+    });
 }
 resetForm();
