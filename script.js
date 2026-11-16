@@ -125,11 +125,11 @@ getCategories();
 
 
 
-async function filterByCategories(selectedCategory) {
+/* async function filterByCategories(selectedCategory) {
     try {
         let URL;
 
-        if (selectedCategory === "") {
+        if (category.value === "") {
             URL = `${API_URL}/products`;
         } else {
             URL = `${API_URL}/products?categoryId=${selectedCategory}`;
@@ -148,15 +148,15 @@ async function filterByCategories(selectedCategory) {
     } catch (error) {
         console.log(error);
     }
-}
+} */
 category.addEventListener("change", async function () {
-    filterByCategories(category.value);
+    //filterByCategories(category.value);
     filterByAll();
 })
 
 
 
-async function filterByMaxPrice(price) {
+/* async function filterByMaxPrice(price) {
 
     try {
         const response = await fetch(
@@ -177,15 +177,15 @@ async function filterByMaxPrice(price) {
 
 
 
-}
+} */
 maxPrice.addEventListener("input", async function () {
-    filterByMaxPrice(maxPrice.value);
+    //filterByMaxPrice(maxPrice.value);
     filterByAll();
 })
 
 
 
-async function filterByStock(isChecked) {
+/* async function filterByStock(isChecked) {
     try {
         let URL;
 
@@ -212,9 +212,9 @@ async function filterByStock(isChecked) {
         console.log(error);
     }
 }
-
+ */
 inStock.addEventListener("change", () => {
-    filterByStock(inStock.checked);
+    //filterByStock(inStock.checked);
     filterByAll();
 });
 
@@ -260,7 +260,7 @@ function resetForm() {
         inStock.checked = false;
         console.log("réinitialiser des filtres!")
 
-        getProducts()
+        getProducts();
     });
 }
 resetForm();
