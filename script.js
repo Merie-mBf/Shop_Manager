@@ -1,14 +1,28 @@
+import { readProduct } from "./storage.js";
+import { saveProduct } from "./storage.js";
+
 const products = document.getElementById("products");
 const searchInput = document.getElementById("searchInput");
 const category = document.getElementById("category");
 const maxPrice = document.getElementById("maxPrice");
 const inStock = document.getElementById("inStock");
 const btnReset = document.getElementById("btnReset");
+const cart = document.getElementById("cart");
+const GoToCart = document.getElementById("GoToCart");
+const closeCart = document.getElementById("closeCart");
+const ListcartProduct = document.getElementById("ListCartProducts");
+const cartCount = document.getElementById("cartCount");
+const cartTotal = document.getElementById("cartTotal");
+const clearCart = document.getElementById("clearCart");
+
+
 
 const API_URL = "http://localhost:3000/api";
 
+let AllProducts = [];
+let cartProducts = readProduct();
 
-
+//Shop Manager 1/1
 async function getProducts() {
     try {
         const response = await fetch(API_URL + "/products");
@@ -17,9 +31,10 @@ async function getProducts() {
             throw new Error("Failed to load products");
         }
 
-        const data = await response.json();
+        AllProducts = await response.json();
 
-        afficheProduct(data, "No products available at the moment!");
+        afficheCart();
+        afficheProduct(AllProducts, "No products available at the moment!");
 
     } catch (error) {
         console.log(error);
@@ -45,8 +60,9 @@ function afficheProduct(data, messageErr) {
         return;
     }
     data.forEach(product => {
+        const outOfStock = product.stock === 0;
         template += `
-       <article 
+       <article data-id="${product.id}" data-price="${product.price}" data-stock="${product.stock}"
                 class="product-card  w-full sm:w-[48%] lg:w-[31%] bg-white rounded-3xl overflow-hidden border border-[#eee2d7] shadow-sm hover:shadow-lg transition duration-300">
                 <img class="w-full h-64 object-contain bg-[#f0e5d9] p-6" src="http://localhost:3000${product.image}" alt="${product.name}">
                 <div class="product-info p-6">
@@ -54,9 +70,20 @@ function afficheProduct(data, messageErr) {
                     <p class="text-gray-600 text-base leading-7 mb-5">${product.description}</p>
                     <span class="block text-[#9b765e] border-t border-[#eee2d7] pt-4 mb-3">Price:${product.price}DH</span>
                     <span class="block text-[#9b765e] mb-3">Category:${product.categoryName}</span>
-                    <span class="inline-block bg-[#f3e9df] text-[#795337] rounded-full px-4 py-2 text-sm font-semibold">In stock:${product.stock}</span>
                 </div>
-            </article>`
+                <div class="flex items-center justify-between mb-1 ml-5 mr-6">
+                   <span class="inline-block bg-[#f3e9df] text-[#795337] rounded-full px-4 py-2   text-sm font-semibold">In stock:${product.stock}</span>
+                   <input type="number" min="1" max="${product.stock}" value="1" ${outOfStock ? "disabled" : ""}
+                        class="w-16 h-9 text-center bg-[#f8f3ee] border border-[#e5d5c5] rounded-lg text-sm text-[#382719] outline-none focus:border-[#9b765e]">
+                </div>
+                <div class="flex justify-center mt-8 mb-2">
+                   <button ${outOfStock ? "disabled" : ""}
+                        class="addToCard w-80 h-9 text-white text-sm font-medium rounded-lg transition flex items-center justify-center gap-2
+                        ${outOfStock ? "bg-gray-400 cursor-not-allowed" : "bg-[#795337] hover:bg-[#5f4029]"}">
+                        <i class="fa-solid fa-cart-shopping"></i>${outOfStock ? "Out of stock" : "Add to cart"}
+                   </button>
+                </div>
+        </article>`
         console.log(product.image);
     });
     products.innerHTML = template;
@@ -264,3 +291,92 @@ function resetForm() {
     });
 }
 resetForm();
+
+
+//Shop Manager 2/2
+GoToCart.addEventListener("click", (e) => {
+    e.preventDefault();
+    afficheCart();
+    cart.showModal();
+});
+
+closeCart.addEventListener("click", () =>{
+    cart.close()
+});
+
+cart.addEventListener("click", (e) => {
+    if (e.target === cart) cart.close();
+});
+
+
+function getInfosProduct(button) {
+    const card = button.closest(".product-card");
+    const quantity = Number(card.querySelector("input").value);
+    const product = AllProducts.find(p => p.id == card.dataset.id);
+    
+    if (quantity < 1 || quantity > product.stock) {
+        Swal.fire({
+            title: 'Invalid Quantity!',
+            text: `Please enter a quantity between 1 and ${product.stock}.`,
+            icon: 'warning',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#795337'
+        });
+        return;
+    }
+
+    return {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        quantity
+    };
+}
+
+document.addEventListener("click", (e) => {
+    const button = e.target.closest(".addToCard");
+    if (!button) return;
+
+    const product = getInfosProduct(button);
+    if (!product) return;
+
+    cartProducts.push(product);
+    saveProduct(cartProducts);
+});
+
+function afficheCart() {
+    if (cartProducts.length === 0) {
+        ListcartProduct.innerHTML = `<p class="text-[#795337] font-bold">Your cart is empty.</p>`;
+        cartCount.textContent = 0;
+        cartTotal.textContent = 0;
+        return;
+    }
+
+    ListcartProduct.innerHTML = cartProducts.map(item => 
+       ` <article data-id="${item.id}"
+            class="product-cart w-full bg-white rounded-2xl border border-[#eee2d7] shadow-sm flex items-center gap-4 p-4 mb-3">
+            <img class="w-28 h-28 shrink-0 object-contain rounded-xl bg-[#f0e5d9] p-1"
+                 src="http://localhost:3000${item.image}" alt="${item.name}">
+            <div class="product-info flex-1 min-w-0">
+                <h4 class="text-base font-bold text-[#382719] mb-2">${item.name}</h4>
+                <span class="block text-sm text-[#9b765e] mb-1">${item.price} DH</span>
+                <span class="block text-sm font-semibold text-[#382719] mb-2">Sous-total: ${item.price * item.quantity} DH</span>
+                <div class="flex items-center gap-2">
+                    <span class="text-sm text-[#9b765e]">Quantité:</span>
+                    <button class="quantity-minus w-7 h-7 rounded bg-[#f0e5d9]">-</button>
+                    <input type="number" min="1" value="${item.quantity}"
+                        class="quantity-input w-12 h-7 text-center border border-[#eee2d7] rounded">
+                    <button class="quantity-plus w-7 h-7 rounded bg-[#f0e5d9]">+</button>
+                </div>
+            </div>
+            <button class="removeItem shrink-0 self-end w-10 h-10 flex items-center justify-center rounded-xl text-[#9b765e] hover:bg-red-50 hover:text-red-500 transition duration-200"
+                title="Supprimer">
+                <i class="fa-solid fa-trash-can text-sm"></i>
+            </button>
+        </article>
+    `);
+
+    cartCount.textContent = cartProducts.reduce((sum, p) => sum + p.quantity, 0);
+    cartTotal.textContent = cartProducts.reduce((sum, p) => sum + (p.price * p.quantity), 0);
+}
