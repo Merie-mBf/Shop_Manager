@@ -467,6 +467,7 @@ function deleteLigne(target) {
 clearCart.addEventListener("click", () => {
     cartProducts = [];
 
+    
     saveProduct(cartProducts);
     afficheCart();
 });
