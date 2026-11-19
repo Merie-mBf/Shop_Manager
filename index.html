@@ -125,11 +125,62 @@
             </dialog>
         </section>
 
-        <section id="form">
-            <form action="" method="post">
-                 
-            </form>
+
+        <section id="FormClient">
+            <dialog id="Form"
+                class="m-0 ml-auto h-screen max-h-screen w-[550px] max-w-full p-0 shadow-xl backdrop:bg-black/40">
+                <div class="flex justify-between items-center p-5 border-b border-[#eee2d7]">
+                    <h2 class="font-bold text-[#4b3023] text-xl">Reservation form</h2>
+                    <button id="closeForm" type="button"
+                        class="w-9 h-9 rounded-full bg-[#f0e5d9] text-[#4b3023] flex items-center justify-center hover:bg-[#4b3023] hover:text-white transition">
+                        <i class="fa-solid fa-x"></i>
+                    </button>
+                </div>
+                <form id="FormContent" class="p-6 space-y-5 overflow-y-auto">
+                    <div>
+                        <label for="Name" class="block text-sm font-medium text-[#4b3023] mb-2"> Name </label>
+                        <input type="text" id="Name" name="name" required placeholder="Enter your name"
+                            class="w-full h-11 px-4 border border-[#e8d5c4] rounded-lg outline-none focus:border-[#4b3023]">
+                    </div>
+                    <div>
+                        <label for="Email" class="block text-sm font-medium text-[#4b3023] mb-2">Email Address </label>
+                        <input type="email" id="Email" name="email" required placeholder="example123@email.com"
+                            class="w-full h-11 px-4 border border-[#e8d5c4] rounded-lg outline-none focus:border-[#4b3023]">
+                    </div>
+                    <div>
+                        <label for="Address" class="block text-sm font-medium text-[#4b3023] mb-2"> Address </label>
+                        <input type="text" id="Address" name="address" required placeholder="Enter your address"
+                            class="w-full h-11 px-4 border border-[#e8d5c4] rounded-lg outline-none focus:border-[#4b3023]">
+                    </div>
+
+                    <div>
+                        <label for="City" class="block text-sm font-medium text-[#4b3023] mb-2">City</label>
+                        <input type="text" id="City" name="city" required placeholder="Enter your city"
+                            class="w-full h-11 px-4 border border-[#e8d5c4] rounded-lg outline-none focus:border-[#4b3023]">
+                    </div>
+                    <div>
+                        <label for="Phone" class="block text-sm font-medium text-[#4b3023] mb-2"> Phone Number </label>
+                        <input type="tel" id="Phone" name="phone" placeholder="Enter your phone number"
+                            class="w-full h-11 px-4 border border-[#e8d5c4] rounded-lg outline-none focus:border-[#4b3023]">
+                    </div>
+                    <div>
+                        <label for="PostalCode" class="block text-sm font-medium text-[#4b3023] mb-2">Postal Code </label>
+                        <input type="text" id="PostalCode" name="postalCode" placeholder="Enter your postal code"
+                            class="w-full h-11 px-4 border border-[#e8d5c4] rounded-lg outline-none focus:border-[#4b3023]">
+                    </div>
+                    <div>
+                        <label for="Note" class="block text-sm font-medium text-[#4b3023] mb-2">Note</label>
+                        <textarea id="Note" name="note" rows="3" placeholder="Add a note "
+                            class="w-full p-4 border border-[#e8d5c4] rounded-lg outline-none focus:border-[#4b3023] resize-none"></textarea>
+                    </div>
+                    <button type="submit"
+                        class="w-full h-11 bg-[#4b3023] text-[#f0e5d9] font-medium rounded-lg hover:bg-[#382719] transition">
+                        Confirm Reservation
+                    </button>
+                </form>
+            </dialog>
         </section>
+
     </main>
 
     <script src="https://cdn.tailwindcss.com"></script>

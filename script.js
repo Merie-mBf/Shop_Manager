@@ -470,3 +470,18 @@ clearCart.addEventListener("click", () => {
     saveProduct(cartProducts);
     afficheCart();
 });
+
+//Form client
+const Form = document.getElementById("Form");
+
+const reserveCart = document.getElementById("reserveCart");
+const closeForm = document.getElementById("closeForm");
+
+reserveCart.addEventListener("click", () => {
+    cart.close();
+    Form.showModal();
+});
+
+closeForm.addEventListener("click", () => {
+    Form.close();
+});
