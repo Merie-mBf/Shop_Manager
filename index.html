@@ -90,7 +90,7 @@
         <section id="dialog">
             <dialog id="cart"
                 class="m-0 ml-auto h-screen max-h-screen w-[550px] max-w-full p-0 shadow-xl backdrop:bg-black/40 open:flex flex-col">
-                
+
                 <div class="flex justify-between items-center p-6 pb-0 mb-8 shrink-0">
                     <h2 class="flex items-center gap-3 font-bold text-[#4b3023] text-xl">
                         <i class="fa-solid fa-cart-shopping"></i> My Cart
@@ -101,18 +101,34 @@
                     </button>
                 </div>
 
-                <div id="ListCartProducts" 
-                class="flex-1 overflow-y-auto overscroll-contain min-h-0 px-6"></div>
+                <div id="ListCartProducts" class="flex-1 overflow-y-auto overscroll-contain min-h-0 px-6"></div>
 
                 <div class="border-t border-[#eee2d7] p-6 ">
                     <p class="text-[#382719]">Articles: <span id="cartCount">0</span></p>
                     <p class="font-bold text-[#382719]">Total: <span id="cartTotal">0</span> DH</p>
-                    <button id="clearCart"
-                        class="mt-3 w-full h-9 bg-red-600 hover:bg-red-700 text-white text-sm rounded-lg">
-                        Empty the cart
-                    </button>
+                    <div class="mt-3 flex items-center gap-3">
+                        <button id="clearCart" type="button"
+                            class="group flex-1 h-9 bg-[#4b3023] text-[#f0e5d9] text-sm font-medium rounded-lg transition-colors cursor-pointer">
+                            <span class="inline-block transition-transform duration-200 group-hover:scale-110">
+                                Empty the cart
+                            </span>
+                        </button>
+
+                        <button id="reserveCart" type="button"
+                            class="group flex-1 h-9 bg-[#f0e5d9] text-[#4b3023] text-sm font-medium rounded-lg transition-colors cursor-pointer">
+                            <span class="inline-block transition-transform duration-200 group-hover:scale-110">
+                                Reserver
+                            </span>
+                        </button>
+                    </div>
                 </div>
             </dialog>
+        </section>
+
+        <section id="form">
+            <form action="" method="post">
+                 
+            </form>
         </section>
     </main>
 

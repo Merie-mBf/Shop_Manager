@@ -409,7 +409,7 @@ function afficheCart() {
                 </div>
             </div>
             <button  title="Supprimer">
-                <i class="removeLigne fa-solid fa-trash-can self-end w-10 h-10 flex items-center justify-center rounded-xl text-[#9b765e]
+                <i class="removeLigne fa-solid fa-trash-can  w-10 h-10 flex items-center justify-center rounded-xl text-[#9b765e]
                  hover:bg-red-50 hover:text-red-500 transition duration-200" data-id="${item.id}"></i>
             </button>
         </article>
@@ -467,7 +467,6 @@ function deleteLigne(target) {
 clearCart.addEventListener("click", () => {
     cartProducts = [];
 
-    
     saveProduct(cartProducts);
     afficheCart();
 });
