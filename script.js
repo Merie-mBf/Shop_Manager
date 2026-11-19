@@ -22,6 +22,8 @@ const API_URL = "http://localhost:3000/api";
 let AllProducts = [];
 let cartProducts = readProduct();
 
+
+
 //Shop Manager 1/1
 async function getProducts() {
     try {
@@ -73,7 +75,7 @@ function afficheProduct(data, messageErr) {
                 </div>
                 <div class="flex items-center justify-between mb-1 ml-5 mr-6">
                    <span class="inline-block bg-[#f3e9df] text-[#795337] rounded-full px-4 py-2   text-sm font-semibold">In stock:${product.stock}</span>
-                   <input type="number" min="1" max="${product.stock}" value="1" ${outOfStock ? "disabled" : ""}
+                   <input type="number" min="1" max="${product.stock}" value="1"
                         class="w-16 h-9 text-center bg-[#f8f3ee] border border-[#e5d5c5] rounded-lg text-sm text-[#382719] outline-none focus:border-[#9b765e]">
                 </div>
                 <div class="flex justify-center mt-8 mb-2">
@@ -300,7 +302,7 @@ GoToCart.addEventListener("click", (e) => {
     cart.showModal();
 });
 
-closeCart.addEventListener("click", () =>{
+closeCart.addEventListener("click", () => {
     cart.close()
 });
 
@@ -308,12 +310,12 @@ cart.addEventListener("click", (e) => {
     if (e.target === cart) cart.close();
 });
 
-
+//Ajouter un produit au panier depuis sa carte
 function getInfosProduct(button) {
     const card = button.closest(".product-card");
     const quantity = Number(card.querySelector("input").value);
     const product = AllProducts.find(p => p.id == card.dataset.id);
-    
+
     if (quantity < 1 || quantity > product.stock) {
         Swal.fire({
             title: 'Invalid Quantity!',
@@ -324,7 +326,6 @@ function getInfosProduct(button) {
         });
         return;
     }
-
     return {
         id: product.id,
         name: product.name,
@@ -341,11 +342,47 @@ document.addEventListener("click", (e) => {
     const product = getInfosProduct(button);
     if (!product) return;
 
-    cartProducts.push(product);
+    const stock = AllProducts.find(p => p.id == product.id).stock;
+    const ProductExist = cartProducts.find(p => p.id == product.id);
+    const quantity = ProductExist ? ProductExist.quantity : 0;
+    const newQuantity = quantity + Number(product.quantity);
+
+    if (newQuantity > stock) {
+        const newStock = Math.max(stock - quantity, 0);
+        Swal.fire({
+            title: 'Insufficient stock',
+            text:
+                newStock > 0
+                    ? `You can add ${newStock} more.`
+                    : 'Cart is at max stock.',
+            icon: 'warning',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#795337',
+        });
+        return;
+    }
+    //augmenter la quantité au lieu de créer une deuxième ligne
+    if (ProductExist) {
+        ProductExist.quantity += product.quantity;
+
+    } else {
+        cartProducts.push(product);
+    }
     saveProduct(cartProducts);
+    Swal.fire({
+        title: 'success',
+        text: 'Product added successfully!',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#795337'
+    });
+
+
 });
 
+//Afficher pour chaque ligne : Image, Nom, Prix unitaire, Quantité, Sous-total.
 function afficheCart() {
+    //Afficher un message lorsque le panier est vide.
     if (cartProducts.length === 0) {
         ListcartProduct.innerHTML = `<p class="text-[#795337] font-bold">Your cart is empty.</p>`;
         cartCount.textContent = 0;
@@ -353,8 +390,9 @@ function afficheCart() {
         return;
     }
 
-    ListcartProduct.innerHTML = cartProducts.map(item => 
-       ` <article data-id="${item.id}"
+    ListcartProduct.innerHTML = cartProducts.map(item => {
+        const stock = AllProducts.find(p => p.id == item.id).stock;
+        return ` <article data-id="${item.id}"
             class="product-cart w-full bg-white rounded-2xl border border-[#eee2d7] shadow-sm flex items-center gap-4 p-4 mb-3">
             <img class="w-28 h-28 shrink-0 object-contain rounded-xl bg-[#f0e5d9] p-1"
                  src="http://localhost:3000${item.image}" alt="${item.name}">
@@ -364,19 +402,71 @@ function afficheCart() {
                 <span class="block text-sm font-semibold text-[#382719] mb-2">Sous-total: ${item.price * item.quantity} DH</span>
                 <div class="flex items-center gap-2">
                     <span class="text-sm text-[#9b765e]">Quantité:</span>
-                    <button class="quantity-minus w-7 h-7 rounded bg-[#f0e5d9]">-</button>
-                    <input type="number" min="1" value="${item.quantity}"
-                        class="quantity-input w-12 h-7 text-center border border-[#eee2d7] rounded">
-                    <button class="quantity-plus w-7 h-7 rounded bg-[#f0e5d9]">+</button>
+                    <button class="quantityMinus w-7 h-7 rounded bg-[#f0e5d9]">-</button>
+                    <input type="number" min="1" max="${stock}" value="${item.quantity}"
+                        class="quantity-input w-12 h-7 text-center border border-[#eee2d7] rounded" readonly>
+                    <button class="quantityPlus w-7 h-7 rounded bg-[#f0e5d9]">+</button>
                 </div>
             </div>
-            <button class="removeItem shrink-0 self-end w-10 h-10 flex items-center justify-center rounded-xl text-[#9b765e] hover:bg-red-50 hover:text-red-500 transition duration-200"
-                title="Supprimer">
-                <i class="fa-solid fa-trash-can text-sm"></i>
+            <button  title="Supprimer">
+                <i class="removeLigne fa-solid fa-trash-can self-end w-10 h-10 flex items-center justify-center rounded-xl text-[#9b765e]
+                 hover:bg-red-50 hover:text-red-500 transition duration-200" data-id="${item.id}"></i>
             </button>
         </article>
-    `);
+    `}).join("");
 
+    //Afficher le nombre d'articles et le total du panier.
     cartCount.textContent = cartProducts.reduce((sum, p) => sum + p.quantity, 0);
     cartTotal.textContent = cartProducts.reduce((sum, p) => sum + (p.price * p.quantity), 0);
 }
+
+
+ListcartProduct.addEventListener("click", (e) => {
+    const plus = e.target.closest(".quantityPlus");
+    const minus = e.target.closest(".quantityMinus");
+    if (!plus && !minus) return;
+
+
+    const id = e.target.closest(".product-cart").dataset.id;
+    const item = cartProducts.find(p => p.id == id);
+    const stock = AllProducts.find(p => p.id == id).stock;
+
+    if (plus && item.quantity < stock) item.quantity++;
+    if (minus && item.quantity > 1) item.quantity--;
+
+    saveProduct(cartProducts);
+    afficheCart();
+});
+
+
+//supprimer (retirer une ligne)
+ListcartProduct.addEventListener("click", function (event) {
+
+    let button = event.target.closest(".removeLigne");
+
+    if (button) {
+        deleteLigne(button);
+    }
+
+});
+
+function filterProductById(id) {
+    return cartProducts.filter(item => item.id != id);
+}
+
+
+function deleteLigne(target) {
+    let idDelete = target.dataset.id;
+
+    cartProducts = filterProductById(idDelete);
+    saveProduct(cartProducts);
+    afficheCart();
+}
+
+//Vider le panier.
+clearCart.addEventListener("click", () => {
+    cartProducts = [];
+
+    saveProduct(cartProducts);
+    afficheCart();
+});
