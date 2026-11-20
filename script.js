@@ -14,6 +14,17 @@ const ListcartProduct = document.getElementById("ListCartProducts");
 const cartCount = document.getElementById("cartCount");
 const cartTotal = document.getElementById("cartTotal");
 const clearCart = document.getElementById("clearCart");
+const Form = document.getElementById("Form");
+const reserveCart = document.getElementById("reserveCart");
+const closeForm = document.getElementById("closeForm");
+const FormContent = document.getElementById("FormContent");
+const nameInput = document.getElementById("Name");
+const emailInput = document.getElementById("Email");
+const addressInput = document.getElementById("Address");
+const cityInput = document.getElementById("City");
+const phoneInput = document.getElementById("Phone");
+const postalInput = document.getElementById("PostalCode");
+const noteInput = document.getElementById("Note");
 
 
 
@@ -472,11 +483,6 @@ clearCart.addEventListener("click", () => {
 });
 
 //Form client
-const Form = document.getElementById("Form");
-
-const reserveCart = document.getElementById("reserveCart");
-const closeForm = document.getElementById("closeForm");
-
 reserveCart.addEventListener("click", () => {
     cart.close();
     Form.showModal();
@@ -484,4 +490,30 @@ reserveCart.addEventListener("click", () => {
 
 closeForm.addEventListener("click", () => {
     Form.close();
+});
+
+
+FormContent.addEventListener("submit", function (event) {
+    event.preventDefault();
+    const client = {
+        name: nameInput.value,
+        email: emailInput.value,
+        address: addressInput.value,
+        city: cityInput.value,
+        phone: phoneInput.value,
+        postal: postalInput.value,
+    };
+
+    const reservations = [];
+
+    cartProducts.forEach(item => {
+        reservations.push({
+            productId: Number(item.id),
+            quantity: Number(item.quantity),
+            customer: client,
+            notes: noteInput.value
+        });
+    });
+
+    console.log(reservations);
 });
